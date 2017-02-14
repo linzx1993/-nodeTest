@@ -35,10 +35,10 @@ fs.readdir(process.cwd(),function(err,files){
 
         if(filename.isDirectory()){
             console.log(" ");
-            console.log("   (" + files.length + " files");
+            console.log("   (" + files.length + " files)");
             files.forEach(function(file){
                 console.log("   -   " + file);
-            })
+            });
             console.log(" ");
         }else{
             fs.readFile(__dirname + "/" +filename,'utf8',function(err,data){
