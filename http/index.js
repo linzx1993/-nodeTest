@@ -14,6 +14,7 @@ var server = net.createServer(function(conn){
     conn.on("close",function(){
         count --;
         delete user[nickname];
+        broadcast("\033[90m > " + nickname + "left the room \033[39m\n")
     });
     conn.on("data",function(data){
         data.replace("\r\n","");
