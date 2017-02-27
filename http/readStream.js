@@ -14,6 +14,7 @@
 //     })
 // }).listen(3000);
 require("http").createServer(function(req,res){
+    console.log(req.headers);
     res.writeHead(200,{"Contnet-Head" : "image/png"});
     require("fs").createReadStream("image.png").pipe(res);
 }).listen(3000);
