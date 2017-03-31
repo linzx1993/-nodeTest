@@ -6,11 +6,13 @@ module.exports = function(opts){
     return function(req,res,next){
         var timer = setTimeout(function () {
             console.log('\033[90m%s %s\033[39m \033[91mis taking too ling!\033[39m',req.method,req.url);
-        },time)
+        },time);
         var end = res.end;
         res.end = function(chunk,encoding){
-            "use strict";
             res.end = end;
-        }
+            res.end(chunk,encoding);
+            clearTimeout(timer);
+        };
+        next();
     }
-}
+};
