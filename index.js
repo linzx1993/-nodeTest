@@ -1,6 +1,8 @@
 /**
  * Created by yiend on 2017/2/11.
  */
+console.log(__export);
+
 var fs = require("fs"),
     stdin = process.stdin,//指向标准输
     stdout = process.stdout;
