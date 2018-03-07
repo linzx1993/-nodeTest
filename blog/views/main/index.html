@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>index</title>
+	<link rel="stylesheet" href="/public/main.css"/>
+</head>
+<body>
+<img src="/public/images/app-logo.png"/>
+<div id="loginBox">
+	<form action="">
+		<input id="loginUsername" type="text" name="username">
+		<input id="loginPassword" type="password" name="password">
+		<a id="login" href="javascript:void(0)">登录</a>
+	</form>
+</div>
+
+<div id="registerBox">
+	<form action="">
+		<input id="registerUsername" type="text" name="username">
+		<input id="registerPassword" type="password" name="password">
+		<input id="repassword" type="password" name="repassword">
+		<a id="register" href="javascript:void(0)">注册</a>
+	</form>
+</div>
+<script src="/public/js/index.js"></script>
+<script src="/public/js/jquery.min.js"></script>
+<script>
+	let $loginBox = $("#loginBox")
+	let registerBox = $("#registerBox")
+	
+	$("#register").on("click",function () {
+		$.ajax({
+			type:"post",
+			url:'/api/user/register',
+			data: {
+			    username:$("#registerUsername").val(),
+				password:$("#registerPassword").val(),
+                repassword:$("#repassword").val()
+			},
+			dataType:'json',
+			success : function (data) {
+			    console.log(data);
+            }
+		})
+    })
+
+	$("#login").on("click",function () {
+		$.ajax({
+			type:"post",
+			url:'/api/user/login',
+			data: {
+			    username:$("#loginUsername").val(),
+				password:$("#loginPassword").val(),
+			},
+			dataType:'json',
+			success : function (data) {
+			    console.log(data);
+            }
+		})
+    })
+</script>
+</body>
+</html>
