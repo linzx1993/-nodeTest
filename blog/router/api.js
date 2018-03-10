@@ -4,6 +4,7 @@
 const express = require("express");
 const router = express.Router()
 const User = require("../models/User")
+const Content = require("../models/Content")
 
 let responseData = {};
 
@@ -16,7 +17,6 @@ router.use(function (req,res,next) {
 })
 
 router.post("/user/register",function (req, res, next) {
-   console.log(req.body);
    let username = req.body.username
    let password = req.body.password
    let repassword = req.body.repassword
@@ -45,8 +45,7 @@ router.post("/user/register",function (req, res, next) {
     User.findOne({
         username : username
     }).then(function (userInfo) {
-        console.log(userInfo)
-        if(!userInfo) {//存在
+        if(userInfo) {//存在
             responseData.code = 4
             responseData.message = '用户名已经被注册'
             res.json(responseData)
@@ -62,14 +61,13 @@ router.post("/user/register",function (req, res, next) {
     }).then(function (newUserInfo) {
         responseData.message = '用户名已经注册成功'
         res.json(responseData)
-        console.log(newUserInfo)
+        return;
     })
 })
 
 router.post("/user/login",function (req,res,next) {
     let username = req.body.username
     let password = req.body.password
-    console.log(username,password)
 
     if (username === '' || password === ''){
         responseData.code = 1
@@ -84,7 +82,7 @@ router.post("/user/login",function (req,res,next) {
         username : username,
         password : password
     }).then(function (userInfo) {
-        if(userInfo){
+        if(!userInfo){//不存在
             responseData.code = 2
             responseData.message = '用户名或密码错误'
 
@@ -92,13 +90,56 @@ router.post("/user/login",function (req,res,next) {
             return
         }
 
+        responseData.userInfo = {
+            _id : userInfo._id,
+            username : userInfo.username
+        }
         responseData.message = '登录成功'
 
+        req.cookies.set('userInfo',JSON.stringify({
+            _id : userInfo._id,
+            username : userInfo.username
+        }))
         res.json(responseData)
         return
     })
+})
 
+router.get('/user/loginOut',function (req, res, next) {
+    req.cookies.set('userInfo',null);
+    res.json(responseData)
+})
 
+router.get("/comment",function (req, res) {
+    let contentId = req.query.contentid || ''
+    console.log(JSON.stringify(req.query) + "423423");
+    Content.findOne({
+        _id :contentId
+    }).then(function (content) {
+        responseData.data = content.comments;
+        res.json(responseData)
+    })
+})
+
+router.post('/comment/post',function (req, res) {
+    let contentId = req.body.contentid || ''
+    let postData = {
+        username:req.userInfo.username,
+        pastTime : new Date(),
+        content :req.body.content
+    }
+
+    Content.findOne({
+        _id : contentId
+    }).then(function (content) {
+        content.comments.push(postData)
+        return content.save()
+    }).then(function (newContent) {
+        responseData.message = "评论成功"
+        responseData.data = newContent.comments
+        res.json(responseData)
+        
+    })
 })
 
 module.exports = router;

@@ -2,9 +2,19 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>$Title$</title>
+	<title>admin</title>
+	<link rel="stylesheet" href="/public/css/bootstrap.css"/>
+	<link rel="stylesheet" href="/public/css/bootstrap-theme.css"/>
+	<script src="/public/js/jquery.min.js"></script>
+	<script src="/public/js/bootstrap.js"></script>
 </head>
 <body>
-$END$
+{{ userInfo.username }}
+<a href="/admin/user">用户管理</a>
+<a href="/admin/category">分类管理</a>
+<a href="/admin/content">内容管理</a>
+{% block main %}
+index
+{% endblock %}
 </body>
 </html>

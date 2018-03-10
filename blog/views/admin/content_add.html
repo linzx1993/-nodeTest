@@ -3,15 +3,17 @@
 {% block main %}
 
 <form method="post">
-
 	内容分类：
 	<select name="category" id="category">
-		<option value=""></option>
+
+		{% for category in categories%}
+		<option value="{{category.id}}">{{category.name }}</option>
+		{% endfor%}
 	</select>
 	
 	标题： <input type="text" id="title" name="title"><br/>
-	简介： <input type="text" id="description" name="description"><br/>
-	内容： <input type="text" id="content" name="content"><br/>
+	简介： <textarea name="description" id="description" cols="30" rows="10"></textarea><br/>
+	内容： <textarea name="content" id="content" cols="30" rows="10"></textarea><br/>
 	<button id="add">添加</button>
 </form>
 

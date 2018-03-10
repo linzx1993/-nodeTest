@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>index</title>
+	<link rel="stylesheet" href="/public/css/bootstrap.css"/>
+	<link rel="stylesheet" href="/public/css/bootstrap-theme.css"/>
+	<script src="/public/js/index.js"></script>
+	<script src="/public/js/jquery.min.js"></script>
+</head>
+<body>
+<img src="/public/images/app-logo.png"/>
+<ul class="menu">
+	{% for cate in categories%}
+	<li><a href="/?category={{cate.id}}">{{cate.name }}</a></li>
+	{% endfor%}
+</ul>
+<div id="loginBox">
+	<form action="">
+		<input id="loginUsername" type="text" name="username">
+		<input id="loginPassword" type="password" name="password">
+		<a id="login" href="javascript:void(0)">登录</a>
+	</form>
+</div>
+
+<div id="registerBox">
+	<form action="">
+		<input id="registerUsername" type="text" name="username">
+		<input id="registerPassword" type="password" name="password">
+		<input id="repassword" type="password" name="repassword">
+		<a id="register" href="javascript:void(0)">注册</a>
+	</form>
+</div>
+
+<a href="javascript:;" id="loginOut">退出</a>
+
+{% if userInfo._id %}
+{{userInfo.username}} 已登录
+
+{% if userInfo.isAdmin %}
+管理员：{{userInfo.username}}
+<a href="/admin">进入管理</a>
+{% else %}
+普通用户：{{userInfo.username}}
+{% endif %}
+{% else %}
+未登录
+{% endif %}
+
+{%block content%}
+{%endblock%}
+
+
+<script>
+
+    $("#register").on("click",function () {
+        $.ajax({
+            type:"post",
+            url:'/api/user/register',
+            data: {
+                username:$("#registerUsername").val(),
+                password:$("#registerPassword").val(),
+                repassword:$("#repassword").val()
+            },
+            dataType:'json',
+            success : function (data) {
+                console.log(data);
+            }
+        })
+    })
+
+    $("#login").on("click",function () {
+        $.ajax({
+            type:"post",
+            url:'/api/user/login',
+            data: {
+                username:$("#loginUsername").val(),
+                password:$("#loginPassword").val(),
+            },
+            dataType:'json',
+            success : function (data) {
+                console.log(data);
+            }
+        })
+    })
+
+    $("#loginOut").on("click",function () {
+        $.ajax({
+            url:'/api/user/loginOut',
+            success :function (res) {
+                if(!res.code){
+                    window.location().reload();
+                }
+            }
+        })
+    })
+</script>
+</body>
+</html>

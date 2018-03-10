@@ -1,10 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+{% extends 'layout.html' %}
+
+{% block main %}
+
+<form method="post">
+	编辑分类： <input type="text" id="name" name="name">
+	<button id="add">添加</button>
+</form>
+
+{% endblock %}

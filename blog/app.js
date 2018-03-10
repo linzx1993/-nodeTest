@@ -5,8 +5,8 @@ let express = require("express")
 //模板
 const swig = require("swig")
 const mongoose = require("mongoose")
-
 const bodyParser = require("body-parser")
+const Cookies = require("cookies")
 
 let app = express();
 //设置静态文件托管
@@ -23,17 +23,37 @@ app.set('view engine', 'html')
 swig.setDefaults({cache: false})
 
 app.use(bodyParser.urlencoded({
-    extends:true
+    extended:true
 }))
 
-app.get("/",function (req, res) {
-    //读取view目录下的指定文件，解析并返回客户端
-    res.render('main/index')
+let User = require("./models/User")
+
+app.use(function (req, res, next) {
+    req.cookies = new Cookies(req,res)
+
+
+    req.userInfo = {}
+    if(req.cookies.get('userInfo')){
+        try {
+            req.userInfo = JSON.parse(req.cookies.get('userInfo'))
+            //获取当前用户登录的类型
+            User.findById(req.userInfo._id).then(function (userInfo) {
+                req.userInfo.isAdmin = Boolean(userInfo.isAdmin)
+                next()
+            })
+        } catch(e){
+            next()
+        }
+    } else {
+        next()
+    }
+
 })
+
 
 app.use("/admin", require('./router/admin'))
 app.use("/api", require('./router/api'))
-// app.use("/", require('./router/main'))
+app.use("/", require('./router/main'))
 
 mongoose.connect('mongodb://localhost:27018/blog',function (err) {
     if(err){

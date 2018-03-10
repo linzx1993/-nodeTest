@@ -1,0 +1,56 @@
+{% extends 'layout.html'%}
+
+{%block content%}
+	<div>
+		<h1>{{content.title}}</h1>
+		<p>
+			作者：<span>{{content.userInfo.username}}</span>
+			时间：<span>{{content.addTime | date('Y年m月d日 H:i:s',-8*60)}}</span>
+			阅读：<span>{{content.views}}</span>
+			评论：<span>{{content.userInfo.username}}</span>
+		</p>
+		<p>简介：{{content.description}}</p>
+		<p>内容：{{content.content}}</p>
+	</div>
+
+<div>
+	<h1>评论</h1>
+
+	{% if userInfo._id%}
+	<textarea id="content" name="" id="" cols="30" rows="10"></textarea>
+	<input type="hidden" id="contentId" value="{{content._id.toString()}}">
+	<button id="addComment">添加</button>
+	{% else %}
+	<p>你还没有登录</p>
+	{%endif%}
+
+</div>
+
+<script>
+	$(function () {
+        $.ajax({
+            url : '/api/comment?contentid=' + $("#contentId").val(),
+            dataType:'json',
+            success : function (res) {
+                console.log(res);
+            }
+        })
+
+
+        $("#addComment").on("click",function () {
+            $.ajax({
+                type :'post',
+                url : '/api/comment/post',
+                data : {
+                    contentid : $("#contentId").val(),
+                    content : $("#content").val(),
+                },
+                dataType:'json',
+                success : function (res) {
+                    $("content").val('')
+                }
+            })
+        })
+    })
+</script>
+{%endblock%}

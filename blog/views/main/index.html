@@ -1,64 +1,37 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<title>index</title>
-	<link rel="stylesheet" href="/public/main.css"/>
-</head>
-<body>
-<img src="/public/images/app-logo.png"/>
-<div id="loginBox">
-	<form action="">
-		<input id="loginUsername" type="text" name="username">
-		<input id="loginPassword" type="password" name="password">
-		<a id="login" href="javascript:void(0)">登录</a>
-	</form>
-</div>
+{% extends 'layout.html'%}
 
-<div id="registerBox">
-	<form action="">
-		<input id="registerUsername" type="text" name="username">
-		<input id="registerPassword" type="password" name="password">
-		<input id="repassword" type="password" name="repassword">
-		<a id="register" href="javascript:void(0)">注册</a>
-	</form>
-</div>
-<script src="/public/js/index.js"></script>
-<script src="/public/js/jquery.min.js"></script>
-<script>
-	let $loginBox = $("#loginBox")
-	let registerBox = $("#registerBox")
-	
-	$("#register").on("click",function () {
-		$.ajax({
-			type:"post",
-			url:'/api/user/register',
-			data: {
-			    username:$("#registerUsername").val(),
-				password:$("#registerPassword").val(),
-                repassword:$("#repassword").val()
-			},
-			dataType:'json',
-			success : function (data) {
-			    console.log(data);
-            }
-		})
-    })
+{%block content%}
+	{% for content in contents%}
+	<div>
+		<h1>{{content.title}}</h1>
+		<p>
+			作者：<span>{{content.userInfo.username}}</span>
+			时间：<span>{{content.addTime | date('Y年m月d日 H:i:s',-8*60)}}</span>
+			阅读：<span>{{content.views}}</span>
+			评论：<span>{{content.userInfo.username}}</span>
+		</p>
+		<p>{{content.description}}</p>
+		<a href="/view?contentid={{content.id}}">阅读全文 </a>
+	</div>
+	{% endfor %}
 
-	$("#login").on("click",function () {
-		$.ajax({
-			type:"post",
-			url:'/api/user/login',
-			data: {
-			    username:$("#loginUsername").val(),
-				password:$("#loginPassword").val(),
-			},
-			dataType:'json',
-			success : function (data) {
-			    console.log(data);
-            }
-		})
-    })
-</script>
-</body>
-</html>
+	<nav aria-label="...">
+		<ul class="pager">
+			{%if page <= 1%}
+			<li>没有上一页</li>
+			{% else%}
+			<li><a href="?category={{category}}&&page={{page-1}}">Previous</a></li>
+			{% endif %}
+
+
+			<li>一共{{count}}条数据，共{{pages}}页,每页显示{{limit}}，当前第{{page}}页</li>
+
+			{%if page >= pages%}
+			<li>没有下一页</li>
+			{% else%}
+			<li><a href="?category={{category}}&&page={{page+1}}">Next</a></li>
+			{% endif %}
+
+		</ul>
+	</nav>
+{%endblock%}

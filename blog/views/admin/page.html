@@ -1,10 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+<nav aria-label="...">
+	<ul class="pager">
+		<li><a href="/admin/user?page={{page-1}}">Previous</a></li>
+		<li>一共{{count}}条数据，共{{pages}}页,每页显示{{limit}}，当前第{{page}}页</li>
+		<li><a href="/admin/user?page={{page+1}}">Next</a></li>
+	</ul>
+</nav>

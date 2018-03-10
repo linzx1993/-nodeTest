@@ -1,10 +1,21 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+{% extends 'layout.html' %}
+
+{% block main %}
+<h1>内容修改</h1>
+<form method="post">
+	内容修改：
+	<select name="category" id="category">
+		{% for category in categories%}
+			{% if content.category._id.toString() == category.id %}
+				<option value="{{category.id}}" selected>{{category.name }}</option>
+			{% endif %}
+			<option value="{{category.id}}">{{category.name }}</option>
+		{% endfor %}
+	</select>
+	标题： <input type="text" id="title" name="title" value="{{content.title}}"><br/>
+	简介： <textarea name="description" id="description" cols="30" rows="10">{{content.description}}</textarea><br/>
+	内容： <textarea name="content" id="content" cols="30" rows="10">{{content.content}}</textarea><br/>
+	<button id="add">保存</button>
+</form>
+
+{% endblock %}
